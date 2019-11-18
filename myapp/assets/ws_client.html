@@ -1,0 +1,40 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>The HTML5 Herald</title>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="SitePoint">
+
+  <link rel="stylesheet" href="css/styles.css?v=1.0">
+
+</head>
+
+<body>
+<h1>singwa-swoole-ws test</h1>
+<script>
+var wsUrl = "ws://192.168.231.5:8087";
+var websocket = new WebSocket(wsUrl);
+
+// instant onOpen
+websocket.onopen = function(ev) {
+    websocket.send("hello i am client\n");
+    console.log("connected-swoole-success");
+}
+
+websocket.onmessage = function(ev) {
+    console.log("ws-server-return-data:"+ev.data)
+}
+
+websocket.onclose = function(ev) {
+    console.log("close");
+}
+
+websocket.onerror = function(ev,e) {
+    console.log("error:" + ev.data);
+}
+</script>
+</body>
+</html>
