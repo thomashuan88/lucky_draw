@@ -1,0 +1,1 @@
+docker run -it -p 9501:9501 easyswoole/easyswoole3

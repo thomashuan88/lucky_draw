@@ -2,13 +2,22 @@ version: '2'
 services:
   myapp:
     image: 'bitnami/codeigniter:3'
+    container_name: ld_codeigniter
     ports:
       - '8000:8000'
     volumes:
       - '.:/app'
     depends_on:
-      - mariadb
-  mariadb:
+      - ld_mariadb
+  ld_mariadb:
     image: 'bitnami/mariadb:10.3'
+    container_name: ld_mariadb
+    ports:
+      - '3306:3306'
+    volumes:
+      - mariadb-data:/bitnami/mariadb
     environment:
-      - ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_ROOT_PASSWORD=pass123
+volumes:
+  mariadb-data:
+    driver: local

@@ -75,10 +75,10 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'mariadb'
-	'database_user' => 'bn_app'
-	'database_password' => 'lsa9WA7rZC'
-	'databasename' => 'bitnami_app'
+	'hostname' => 'ld_mariadb',
+	'username' => 'ld_user',
+	'password' => 'pass123',
+	'database' => 'lucky_draw',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
