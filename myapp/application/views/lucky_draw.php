@@ -32,7 +32,7 @@
 				<div class="md-form mb-2">
 				<!-- <i class="far fa-user prefix grey-text"></i> -->
 				<!-- <div class="invalid-feedback">Name is required</div> -->
-				<input type="text" id="username" class="form-control" required>
+				<input type="text" id="username" class="form-control"  maxlength="10" required>
 				<label data-error="" data-success="" for="username">Your Name</label>
 				<div class="invalid-feedback">Name is required</div>
 				</div>
@@ -103,6 +103,7 @@
     </div>
   </div>
 </div>
+
 <h1>抽奖转盘</h1>
 <div class="dowebok">
 	<div class="rotary">
@@ -154,13 +155,29 @@ $(function(){
     
     var csrfName = '<?php echo $this->security->get_csrf_token_name(); ?>',
     csrfHash = '<?php echo $this->security->get_csrf_hash(); ?>'; 
+    var luckynum = 0;
 
 	$('#modalLoginForm').modal('show');
 
 	$('#infoform').submit(function(){ 
-        // $('#modalLoginForm').modal('hide');
+        // 
+        $.post('lucky_draw/save_luckydraw', {
+            [csrfName]:csrfHash, 
+            username:$('#username').val(),
+            email: $('#email').val(),
+            phone: $('#phone').val(),
+            qq: $('#qq').val(),
+            wechat: $('#wechat').val(),
+            otp_number: $('#otp_number').val()
+        }).done(function(data) {
+            csrfName = data.csrfname;
+            csrfHash = data.csrfhash;
+
+            $('#modalLoginForm').modal('hide');
+        });
 		return false; 
     });
+
     $('#draw_result').on('hide.bs.modal', function (e) {
         document.location.reload(true);
     })
@@ -168,12 +185,18 @@ $(function(){
     $('#request_otp').click(function() {
         var phonenumber = $('#phone').val();
         var phoneNumber_pattern = /^[0-9-()+]{5,20}$/;
+
         if (phonenumber.match(phoneNumber_pattern)) { 
+
             $(this).siblings('.invalid-feedback').text("OTP is required").css("display","none");
+
             $.post('lucky_draw/sendotp', {[csrfName]:csrfHash, phone:phonenumber}).done(function(data) {
                 $('#request_otp').text("Resend OTP");
+                csrfName = data.csrfname;
+                csrfHash = data.csrfhash;
                 console.log(data);
             },"json");
+
         } else {
             // error message at otp request
             $(this).siblings('.invalid-feedback').text("Invalid Phone Number").css("display","block");
@@ -200,8 +223,9 @@ $(function(){
 	var $hand = $('.hand');
 
 	$hand.click(function(){
-		var data = [1,2,3,4,5,6,7, 8, 9, 10, 11, 12];
-		data = data[Math.floor(Math.random()*data.length)];
+		// var data = [1,2,3,4,5,6,7, 8, 9, 10, 11, 12];
+		// data = data[Math.floor(Math.random()*data.length)];
+		var data = luckynum;
 
 		switch(data){
 			case 1:
