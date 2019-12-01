@@ -44,15 +44,23 @@ class Lucky_draw extends CI_Controller
 	}
 
 	public function save_luckydraw() {
+		if (
+			$this->session->userdata('user_phone') != $this->input->post("phone") || 
+			$this->session->userdata('otc') != $this->input->post("otp_number")
+		) {
+			echo json_encode(['status':'fail','otp_error'=>'OTP Verification Fail']); return;
+		}
+
         $this->form_validation->set_rules('username', 'Username', 'trim|required|alpha_numeric');
         $this->form_validation->set_rules('phone', 'Phone', 'trim|required||is_unique[userinfo.phone]');
         $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
 		$this->form_validation->set_rules('qq', 'QQ', 'trim|min_length[5]|max_length[10]|integer');
 		$this->form_validation->set_rules('wechat', 'Wechat', 'trim|min_length[4]|max_length[50]|alpha_numeric');
+		$this->form_validation->set_rules('otp_number', 'OTP Number', 'trim|required|exact_length[6]|integer');
 
-        if ($this->form_validation->run() == FALSE){
+		if ($this->form_validation->run() == FALSE){
             $errors = validation_errors();
-            echo json_encode(['error'=>$errors]); return;
+            echo json_encode(['status':'fail','error'=>$errors]); return;
         } else {
 			$this->load->model('Userinfo_model');
 			$draw_result = $this->draw_result();
