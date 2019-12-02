@@ -151,8 +151,9 @@
 <script type="text/javascript" src="assets/js/mdb.min.js"></script>
 <!-- Your custom scripts (optional) -->
 <script type="text/javascript">
+
+
 $(function(){
-    
     var csrfName = '<?php echo $this->security->get_csrf_token_name(); ?>',
     csrfHash = '<?php echo $this->security->get_csrf_hash(); ?>'; 
     var luckynum = 0;
@@ -170,9 +171,10 @@ $(function(){
             wechat: $('#wechat').val(),
             otp_number: $('#otp_number').val()
         }).done(function(data) {
-            csrfName = data.csrfname;
-            csrfHash = data.csrfhash;
-
+            // csrfName = data.csrfname;
+            // csrfHash = data.csrfhash;
+            data = JSON.parse(data);
+            luckynum = data.draw_result;
             $('#modalLoginForm').modal('hide');
         });
 		return false; 
@@ -192,6 +194,7 @@ $(function(){
 
             $.post('lucky_draw/sendotp', {[csrfName]:csrfHash, phone:phonenumber}).done(function(data) {
                 $('#request_otp').text("Resend OTP");
+                data = JSON.parse(data);
                 csrfName = data.csrfname;
                 csrfHash = data.csrfhash;
                 console.log(data);

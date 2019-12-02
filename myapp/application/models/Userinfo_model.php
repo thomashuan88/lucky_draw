@@ -35,6 +35,14 @@ class Userinfo_model extends CI_Model {
         return false;
     }
 
+    public function phone_exist($phone) {
+        $sql = "select username from user_info where phone = ?";
+        if ($this->db->query($sql, array($phone))) {
+            return false;
+        }
+        return true;
+    }
+
     public function check_threeip($ip) {
         $query = $this->db->query("SELECT count(*) as nc FROM user_info where ipaddress = ?", array($address));
         $result = $query->result_array();  
