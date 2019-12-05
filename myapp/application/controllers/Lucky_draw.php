@@ -48,7 +48,7 @@ class Lucky_draw extends CI_Controller
 			$this->session->userdata('user_phone') != $this->input->post("phone") || 
 			$this->session->userdata('otc') != $this->input->post("otp_number")
 		) {
-			echo json_encode(['status'=>'fail','otp_error'=>'OTP Verification Fail']); return;
+			echo json_encode(['status'=>'fail','otp_error'=>'OTP Verification Fail','csrfname'=>$name, 'csrfhash'=>$hash]); return;
 		}
 
 		$this->form_validation->set_rules('username', 'Username', 'trim|required|alpha_numeric');
@@ -58,9 +58,12 @@ class Lucky_draw extends CI_Controller
 		$this->form_validation->set_rules('wechat', 'Wechat', 'trim|min_length[4]|max_length[50]|alpha_numeric');
 		$this->form_validation->set_rules('otp_number', 'OTP Number', 'trim|required|exact_length[6]|integer');
 
+		$name = $this->security->get_csrf_token_name();
+		$hash = $this->security->get_csrf_hash();
+
 		if ($this->form_validation->run() == FALSE){
             $errors = validation_errors();
-            echo json_encode(['status'=>'fail','error'=>$errors]); return;
+            echo json_encode(['status'=>'fail','error'=>$errors,'csrfname'=>$name, 'csrfhash'=>$hash]); return;
         } else {
 			
 			$draw_result = $this->draw_result();
@@ -76,7 +79,7 @@ class Lucky_draw extends CI_Controller
 			if ($this->Userinfo_model->insert_ld($data)) {
 				echo json_encode(['status'=>'success','draw_result'=>$draw_result]); return;
 			} 
-    		echo json_encode(['status'=>'fail']); return;
+    		echo json_encode(['status'=>'fail','csrfname'=>$name, 'csrfhash'=>$hash]); return;
         }
 
 	}
@@ -88,7 +91,7 @@ class Lucky_draw extends CI_Controller
 	}
 
 	public function showtest() {
-		$field_pattern = $this->config->item('ld_misc')['lucky_list'];
-		print_r($field_pattern); 
+		echo $this->session->userdata('user_phone');
+		echo $this->session->userdata('otc');
 	}
 }

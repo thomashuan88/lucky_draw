@@ -171,11 +171,14 @@ $(function(){
             wechat: $('#wechat').val(),
             otp_number: $('#otp_number').val()
         }).done(function(data) {
-            // csrfName = data.csrfname;
-            // csrfHash = data.csrfhash;
-            data = JSON.parse(data);
-            luckynum = data.draw_result;
-            $('#modalLoginForm').modal('hide');
+			data = JSON.parse(data);
+            csrfName = data.csrfname;
+            csrfHash = data.csrfhash;
+            
+			if (data.status == 'success') {
+				luckynum = data.draw_result;
+				$('#modalLoginForm').modal('hide');
+			}
         });
 		return false; 
     });
